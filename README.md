@@ -1,1 +1,1 @@
-# rest-api-template-2025
+# REST API Template (2025)
