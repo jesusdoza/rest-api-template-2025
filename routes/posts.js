@@ -1,18 +1,29 @@
 const router = require('express').Router();
-const { titleValidator, contentValidator } = require('../lib/inputValidators');
 const {
-  getAllPosts,
+  titleValidator,
+  contentValidator,
+  checkValidation,
+} = require('../lib/inputValidators');
+const {
+  getPosts,
   getSinglePost,
-  submitNewPost,
-  updateSinglePost,
-  deleteSinglePost,
+  createPost,
+  editPost,
+  deletePost,
 } = require('../controllers/postsController');
 const { isAdmin } = require('../middleware/authMiddleware');
 
-router.get('/', getAllPosts);
+router.get('/', getPosts);
 router.get('/:postId', getSinglePost);
-router.post('/', titleValidator, contentValidator, submitNewPost);
-router.put('/:postId', isAdmin, updateSinglePost);
-router.delete('/:postId', isAdmin, deleteSinglePost);
+router.post('/', titleValidator, contentValidator, checkValidation, createPost);
+router.put(
+  '/:postId',
+  isAdmin,
+  titleValidator,
+  contentValidator,
+  checkValidation,
+  editPost
+);
+router.delete('/:postId', isAdmin, deletePost);
 
 module.exports = router;
