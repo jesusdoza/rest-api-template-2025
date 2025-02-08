@@ -1,4 +1,4 @@
-const { body, validationResult } = require('express-validator');
+const { body, param, validationResult } = require('express-validator');
 
 const firstNameValidator = body('firstName')
   .trim()
@@ -32,6 +32,10 @@ const contentValidator = body('content')
   .notEmpty()
   .withMessage('Please include content.');
 
+const postIdValidator = param('postId')
+  .isMongoId()
+  .withMessage('Invalid post ID');
+
 const checkValidations = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -53,4 +57,5 @@ module.exports = {
   titleValidator,
   contentValidator,
   checkValidations,
+  postIdValidator,
 };
