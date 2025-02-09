@@ -36,6 +36,10 @@ const postIdValidator = param('postId')
   .isMongoId()
   .withMessage('Invalid post ID');
 
+const userIdValidator = param('userId')
+  .isMongoId()
+  .withMessage('Invalid user ID');
+
 const checkValidations = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -56,6 +60,7 @@ module.exports = {
   passwordValidator,
   titleValidator,
   contentValidator,
-  checkValidations,
   postIdValidator,
+  userIdValidator,
+  checkValidations,
 };
