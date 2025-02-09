@@ -2,7 +2,8 @@ const router = require('express').Router();
 const {
   titleValidator,
   contentValidator,
-  checkValidation,
+  postIdValidator,
+  checkValidations,
 } = require('../lib/inputValidators');
 const {
   getPosts,
@@ -14,14 +15,20 @@ const {
 const { isAdmin } = require('../middleware/authMiddleware');
 
 router.get('/', getPosts);
-router.get('/:postId', getSinglePost);
-router.post('/', titleValidator, contentValidator, checkValidation, createPost);
+router.get('/:postId', postIdValidator, checkValidations, getSinglePost);
+router.post(
+  '/',
+  titleValidator,
+  contentValidator,
+  checkValidations,
+  createPost
+);
 router.put(
   '/:postId',
   isAdmin,
   titleValidator,
   contentValidator,
-  checkValidation,
+  checkValidations,
   editPost
 );
 router.delete('/:postId', isAdmin, deletePost);
