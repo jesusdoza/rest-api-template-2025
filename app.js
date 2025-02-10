@@ -4,7 +4,7 @@ const { corsOptions } = require('./config/corsOptions');
 const compression = require('compression');
 const helmet = require('helmet');
 const { limiter } = require('./config/limiter');
-const { routes } = require('./routes/index');
+const { router } = require('./routes/index');
 const { errorHandler } = require('./middleware/errorMiddleware');
 
 const app = express();
@@ -16,7 +16,7 @@ app.use(compression());
 app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use('/api', routes);
+app.use('/api', router);
 app.use(errorHandler);
 
 module.exports = { app };
