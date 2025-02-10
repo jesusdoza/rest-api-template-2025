@@ -8,4 +8,4 @@ router.use('/auth', authRoutes);
 router.use('/users', isAuth, usersRoutes);
 router.use('/users', isAuth, postsRoutes);
 
-module.exports = router;
+module.exports = { router };
