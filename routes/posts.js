@@ -4,7 +4,7 @@ const {
   contentValidator,
   postIdValidator,
   checkValidations,
-} = require('../lib/inputValidators');
+} = require('../middleware/inputValidators');
 const {
   getPosts,
   getSinglePost,

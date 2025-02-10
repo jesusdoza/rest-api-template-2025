@@ -1,10 +1,13 @@
 const router = require('express').Router();
-const { userIdValidator, checkValidations } = require('../lib/inputValidators');
+const {
+  userIdValidator,
+  checkValidations,
+} = require('../middleware/inputValidators');
 const {
   searchUsers,
   getUsers,
   getSingleUser,
-} = require('../controllers/userController');
+} = require('../controllers/usersController');
 
 router.get('/search', searchUsers);
 router.get('/', getUsers);
