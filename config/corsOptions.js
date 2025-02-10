@@ -1,5 +1,3 @@
-const cors = require('cors');
-
 const whitelist = [
   'https://meuzishun.github.io/pigeon-ui',
   'https://meuzishun.github.io',
@@ -18,5 +16,5 @@ const corsOptions = {
 };
 
 module.exports = {
-  cors,
+  corsOptions,
 };
