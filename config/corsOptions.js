@@ -1,3 +1,5 @@
+const { logger } = require('./logger');
+
 const whitelist = [
   'https://meuzishun.github.io/pigeon-ui',
   'https://meuzishun.github.io',
@@ -7,9 +9,21 @@ const whitelist = [
 
 const corsOptions = {
   origin: function (origin, callback) {
+    logger.log({
+      level: 'info',
+      message: `Receiving request from origin: ${origin}...`,
+    });
     if (!origin || whitelist.includes(origin)) {
+      logger.log({
+        level: 'info',
+        message: `Origin ${origin} is whitelisted`,
+      });
       callback(null, true);
     } else {
+      logger.log({
+        level: 'error',
+        message: `Origin ${origin} is not allowed`,
+      });
       callback(new Error(`Not allowed by CORS: ${origin}`));
     }
   },
