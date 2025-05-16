@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler');
 const Post = require('../models/post');
+const { logger } = require('../config/logger');
 
 // @desc    Read all posts
 // @route   GET /posts
@@ -31,6 +32,12 @@ const createPost = asyncHandler(async (req, res) => {
     title: req.body.title,
     content: req.body.content,
     timestamp: Date.now(),
+  });
+
+  logger.info(`Post created`, {
+    title: post.title,
+    postId: post._id,
+    authorId: post.author,
   });
 
   return res.status(201).json({ post });
