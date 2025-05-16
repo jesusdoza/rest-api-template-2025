@@ -6,6 +6,6 @@ const { isAuth } = require('../middleware/authMiddleware');
 
 router.use('/auth', authRoutes);
 router.use('/users', isAuth, usersRoutes);
-router.use('/users', isAuth, postsRoutes);
+router.use('/posts', isAuth, postsRoutes);
 
 module.exports = { router };
