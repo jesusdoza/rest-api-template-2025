@@ -4,13 +4,15 @@ const User = require('../models/user');
 // @desc    Search users
 // @route   GET /search
 // @access  Private
-const searchUsers = asyncHandler(async (req, res) => {
+const searchUsers = asyncHandler(async (req, res, next) => {
   const { query } = req.query;
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
 
   if (!query) {
-    return res.status(400).json({ message: 'Search query is required' });
+    const error = new Error('Search query is required');
+    error.statusCode = 400;
+    return next(error);
   }
 
   const users = await User.find(
@@ -33,22 +35,24 @@ const searchUsers = asyncHandler(async (req, res) => {
 // @desc    Read all users
 // @route   GET /users
 // @access  Private
-const getUsers = asyncHandler(async (req, res) => {
+const getUsers = asyncHandler(async (req, res, next) => {
   const users = await User.find({}, '-password');
-  return res.status(200).json({ users });
+  res.status(200).json({ users });
 });
 
 // @desc    Read a single user
 // @route   GET /users/:userId
 // @access  Private
-const getSingleUser = asyncHandler(async (req, res) => {
+const getSingleUser = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.params.userId).select('-password');
 
   if (!user) {
-    return res.status(404).json({ message: 'No user found' });
+    const error = new Error('No user found');
+    error.statusCode = 404;
+    return next(error);
   }
 
-  return res.status(200).json({ user });
+  res.status(200).json({ user });
 });
 
 module.exports = {
