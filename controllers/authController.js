@@ -7,7 +7,7 @@ const { logger } = require('../config/logger');
 // @desc    Register new user
 // @route   POST /register
 // @access  Public
-const registerUser = asyncHandler(async (req, res) => {
+const registerUser = asyncHandler(async (req, res, next) => {
   const { firstName, lastName, email, password } = req.body;
   logger.info('Attempting to register user', { firstName, lastName, email });
 
@@ -17,7 +17,9 @@ const registerUser = asyncHandler(async (req, res) => {
     logger.warn(
       `${firstName} ${lastName} is already registered with email ${email}`
     );
-    return res.status(400).json({ message: 'User already exists' });
+    const error = new Error('User already exists');
+    error.statusCode = 400;
+    return next(error);
   }
 
   const salt = await bcrypt.genSalt(10);
@@ -33,7 +35,9 @@ const registerUser = asyncHandler(async (req, res) => {
 
   if (!user) {
     logger.error(`Registration failed for ${firstName} ${lastName}`);
-    res.status(400).json({ message: 'User registration failed' });
+    const error = new Error('User registration failed');
+    error.statusCode = 400;
+    return next(error);
   }
 
   const tokenData = issueJWT(user);
@@ -56,7 +60,7 @@ const registerUser = asyncHandler(async (req, res) => {
 // @desc    Login user
 // @route   POST /login
 // @access  Public
-const loginUser = asyncHandler(async (req, res) => {
+const loginUser = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
   logger.info(`Attempting to login user with ${email}...`);
 
@@ -64,16 +68,18 @@ const loginUser = asyncHandler(async (req, res) => {
 
   if (!user) {
     logger.warn(`No user exists with email ${email}`);
-    return res.status(404).json({ message: 'No user exists with that email' });
+    const error = new Error('No user exists with that email');
+    error.statusCode = 404;
+    return next(error);
   }
 
   const passwordsMatch = await bcrypt.compare(password, user.password);
 
   if (!passwordsMatch) {
     logger.warn(`Incorrect password for user ${email}`);
-    return res
-      .status(401)
-      .json({ message: 'Incorrect password, please try again' });
+    const error = new Error('Incorrect password, please try again');
+    error.statusCode = 401;
+    return next(error);
   }
 
   const tokenData = issueJWT(user);
@@ -96,13 +102,15 @@ const loginUser = asyncHandler(async (req, res) => {
 // @desc    Get user profile
 // @route   GET /profile
 // @access  Private
-const userProfile = asyncHandler(async (req, res) => {
+const userProfile = asyncHandler(async (req, res, next) => {
   logger.info(`Attempting to find user with id ${req.body.user._id}`);
   const user = await User.findById(req.body.user._id, '-password');
 
   if (!user) {
     logger.warn(`No user found with id ${req.body.user._id}`);
-    return res.status(404).json({ message: 'No user found' });
+    const error = new Error('No user found');
+    error.statusCode = 404;
+    return next(error);
   }
 
   logger.info(`User found`, user);
@@ -112,12 +120,12 @@ const userProfile = asyncHandler(async (req, res) => {
 // @desc    Edit user profile
 // @route   PUT /profile
 // @access  Private
-const editProfile = asyncHandler(async (req, res) => {});
+const editProfile = asyncHandler(async (req, res, next) => {});
 
 // @desc    Delete user profile
 // @route   DELETE /profile
 // @access  Private
-const deleteProfile = asyncHandler(async (req, res) => {});
+const deleteProfile = asyncHandler(async (req, res, next) => {});
 
 module.exports = {
   registerUser,
