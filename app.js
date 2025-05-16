@@ -6,6 +6,8 @@ const helmet = require('helmet');
 const { limiter } = require('./config/limiter');
 const { router } = require('./routes/index');
 const { errorHandler } = require('./middleware/errorMiddleware');
+const passport = require('passport');
+require('./config/passport');
 
 const app = express();
 app.options('*', cors(corsOptions));
@@ -16,6 +18,7 @@ app.use(compression());
 app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(passport.initialize());
 app.use('/api', router);
 app.use(errorHandler);
 
