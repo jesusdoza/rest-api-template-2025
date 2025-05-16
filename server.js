@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv-safe').config();
 require('./lib/generateKeyPair');
 const http = require('http');
 const { app } = require('./app');
