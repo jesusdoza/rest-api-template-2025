@@ -120,12 +120,81 @@ const userProfile = asyncHandler(async (req, res, next) => {
 // @desc    Edit user profile
 // @route   PUT /profile
 // @access  Private
-const editProfile = asyncHandler(async (req, res, next) => {});
+const editProfile = asyncHandler(async (req, res, next) => {
+  const userId = req.user._id;
+  const { firstName, lastName, email, currentPassword, newPassword } = req.body;
+
+  const user = await User.findById(userId);
+
+  if (!user) {
+    logger.warn(`No user found with id ${userId}`);
+    const error = new Error('No user found');
+    error.statusCode = 404;
+    return next(error);
+  }
+
+  if (firstName) user.firstName = firstName;
+  if (lastName) user.lastName = lastName;
+  if (email) user.email = email;
+
+  if (currentPassword || newPassword) {
+    if (!currentPassword || !newPassword) {
+      const error = new Error(
+        'Both currentPassword and newPassword are required to change password'
+      );
+      error.statusCode = 400;
+      return next(error);
+    }
+
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+
+    if (!isMatch) {
+      const error = new Error('Current password is incorrect');
+      error.statusCode = 401;
+      return next(error);
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(newPassword, salt);
+  }
+
+  await user.save();
+
+  logger.info(`User profile updated for id ${userId}`);
+
+  res.status(200).json({
+    user: {
+      id: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      isAdmin: user.isAdmin,
+    },
+    message: 'Profile updated successfully',
+  });
+});
 
 // @desc    Delete user profile
 // @route   DELETE /profile
 // @access  Private
-const deleteProfile = asyncHandler(async (req, res, next) => {});
+const deleteProfile = asyncHandler(async (req, res, next) => {
+  const userId = req.user._id;
+
+  const user = await User.findById(userId);
+
+  if (!user) {
+    logger.warn(`No user found with id ${userId}`);
+    const error = new Error('No user found');
+    error.statusCode = 404;
+    return next(error);
+  }
+
+  await user.deleteOne();
+
+  logger.info(`User deleted with id ${userId}`);
+
+  res.status(200).json({ message: 'User deleted successfully' });
+});
 
 module.exports = {
   registerUser,
