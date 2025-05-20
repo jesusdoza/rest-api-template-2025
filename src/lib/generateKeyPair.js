@@ -3,7 +3,7 @@ const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
 
-const rootDir = path.join(__dirname, '..');
+const rootDir = process.cwd();
 
 function genKeyPair() {
   const keyPair = crypto.generateKeyPairSync('rsa', {
@@ -18,12 +18,12 @@ function genKeyPair() {
     },
   });
 
-  fs.writeFileSync(rootDir + '/id_rsa_pub.pem', keyPair.publicKey);
-  fs.writeFileSync(rootDir + '/id_rsa_priv.pem', keyPair.privateKey);
+  fs.writeFileSync(path.join(rootDir, 'id_rsa_pub.pem'), keyPair.publicKey);
+  fs.writeFileSync(path.join(rootDir, 'id_rsa_priv.pem'), keyPair.privateKey);
 
   console.log('genKeyPair called');
 }
 
-if (!fs.existsSync(rootDir + '/id_rsa_pub.pem')) {
+if (!fs.existsSync(path.join(rootDir, 'id_rsa_pub.pem'))) {
   genKeyPair();
 }

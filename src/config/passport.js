@@ -4,7 +4,8 @@ const passport = require('passport');
 const { Strategy, ExtractJwt } = require('passport-jwt');
 const User = require('../models/user');
 
-const pathToKey = path.join(__dirname, '..', 'id_rsa_pub.pem');
+const rootDir = process.cwd();
+const pathToKey = path.join(rootDir, 'id_rsa_pub.pem');
 const PUB_KEY = fs.readFileSync(pathToKey, 'utf8');
 
 const options = {

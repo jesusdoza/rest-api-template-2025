@@ -3,7 +3,8 @@ const fs = require('fs');
 const path = require('path');
 const jsonwebtoken = require('jsonwebtoken');
 
-const pathToPrivKey = path.join(__dirname, '..', 'id_rsa_priv.pem');
+const rootDir = process.cwd();
+const pathToPrivKey = path.join(rootDir, 'id_rsa_priv.pem');
 const PRIV_KEY = fs.readFileSync(pathToPrivKey, 'utf8');
 
 function issueJWT(user) {
