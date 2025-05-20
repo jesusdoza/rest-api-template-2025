@@ -7,19 +7,24 @@ const { logger } = require('../config/logger');
 // @access  Private
 const getPosts = asyncHandler(async (req, res) => {
   const posts = await Post.find();
+  logger.info('Fetched all posts');
   return res.status(200).json({ posts });
 });
 
 // @desc    Read a single post
 // @route   GET /posts/:postId
 // @access  Private
-const getSinglePost = asyncHandler(async (req, res) => {
+const getSinglePost = asyncHandler(async (req, res, next) => {
   const post = await Post.findById(req.params.postId);
 
   if (!post) {
-    return res.status(404).json({ message: 'No post found' });
+    logger.warn(`No post found with id ${req.params.postId}`);
+    const error = new Error('No post found');
+    error.statusCode = 404;
+    return next(error);
   }
 
+  logger.info(`Fetched post with id ${req.params.postId}`);
   return res.status(200).json({ post });
 });
 
@@ -46,11 +51,14 @@ const createPost = asyncHandler(async (req, res) => {
 // @desc    Edit post
 // @route   PUT /posts/:postId/edit
 // @access  Private
-const editPost = asyncHandler(async (req, res) => {
+const editPost = asyncHandler(async (req, res, next) => {
   const post = await Post.findById(req.params.postId);
 
   if (!post) {
-    return res.status(404).json({ message: 'Post not found' });
+    logger.warn(`Post not found with id ${req.params.postId}`);
+    const error = new Error('Post not found');
+    error.statusCode = 404;
+    return next(error);
   }
 
   const updatedPost = await Post.findByIdAndUpdate(
@@ -63,25 +71,33 @@ const editPost = asyncHandler(async (req, res) => {
   );
 
   if (!updatedPost) {
-    return res
-      .status(404)
-      .json({ message: 'Post no longer exists, possibly deleted' });
+    logger.warn(
+      `Post no longer exists (possibly deleted) with id ${req.params.postId}`
+    );
+    const error = new Error('Post no longer exists, possibly deleted');
+    error.statusCode = 404;
+    return next(error);
   }
 
+  logger.info(`Post updated with id ${req.params.postId}`);
   return res.status(200).json(updatedPost);
 });
 
 // @desc    Delete post
 // @route   DELETE /posts/:postId
 // @access  Private
-const deletePost = asyncHandler(async (req, res) => {
+const deletePost = asyncHandler(async (req, res, next) => {
   const post = await Post.findById(req.params.postId);
   if (!post) {
-    return res.status(404).json({ message: 'Post not found' });
+    logger.warn(`Post not found for deletion with id ${req.params.postId}`);
+    const error = new Error('Post not found');
+    error.statusCode = 404;
+    return next(error);
   }
 
   await post.deleteOne();
 
+  logger.info(`Post deleted with id ${req.params.postId}`);
   return res.status(200).json({
     message: `post ${req.params.postId} deleted`,
   });
