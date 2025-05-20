@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler');
 const User = require('../models/user');
+const logger = require('../config/logger');
 
 // @desc    Search users
 // @route   GET /search
@@ -47,6 +48,7 @@ const getSingleUser = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.params.userId).select('-password');
 
   if (!user) {
+    logger.warn(`User not found with id ${req.params.userId}`);
     const error = new Error('No user found');
     error.statusCode = 404;
     return next(error);
