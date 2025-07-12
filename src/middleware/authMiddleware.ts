@@ -1,33 +1,37 @@
-const passport = require('passport');
+import { NextFunction, Request, Response } from "express";
 
-const isAuth = (req, res, next) => {
-  passport.authenticate('jwt', { session: false }, (err, user, info) => {
-    if (err) {
-      return next(err);
+const passport = require("passport");
+
+const isAuth = (req: Request, res: Response, next: NextFunction) => {
+  passport.authenticate(
+    "jwt",
+    { session: false },
+    (err: any, user: any, info: any) => {
+      if (err) {
+        return next(err);
+      }
+
+      if (!user) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      req.user = user;
+      next();
     }
-
-    if (!user) {
-      return res.status(401).json({ message: 'Unauthorized' });
-    }
-
-    req.user = user;
-    next();
-  })(req, res, next);
+  )(req, res, next);
 };
 
-const isAdmin = (req, res, next) => {
+const isAdmin = (req: Request, res: Response, next: NextFunction) => {
   if (!req.user) {
-    return res.status(401).json({ message: 'Unauthorized' });
+    return res.status(401).json({ message: "Unauthorized" });
   }
 
+  //@ts-expect-error isAdmin is a boolean on the user object
   if (!req.user.isAdmin) {
-    return res.status(403).json({ message: 'Forbidden: Admins only' });
+    return res.status(403).json({ message: "Forbidden: Admins only" });
   }
 
   next();
 };
 
-module.exports = {
-  isAuth,
-  isAdmin,
-};
+export { isAuth, isAdmin };
