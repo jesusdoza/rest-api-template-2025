@@ -48,4 +48,4 @@ router.put(
 );
 router.delete("/profile", isAuth, deleteProfile);
 
-module.exports = router;
+export default router;
