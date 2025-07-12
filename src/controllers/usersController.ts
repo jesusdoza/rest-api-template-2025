@@ -79,8 +79,4 @@ const getSingleUser = asyncHandler(
   }
 );
 
-export default {
-  searchUsers,
-  getUsers,
-  getSingleUser,
-};
+export { searchUsers, getUsers, getSingleUser };
