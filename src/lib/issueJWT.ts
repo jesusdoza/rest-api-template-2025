@@ -1,6 +1,6 @@
 require("dotenv").config();
 import fs from "fs";
-// const path = require('path');
+import path from "path";
 import jsonwebtoken from "jsonwebtoken";
 
 const rootDir = process.cwd();
