@@ -4,6 +4,7 @@ import {
   userIdValidator,
   checkValidations,
 } from "../middleware/inputValidators";
+
 import {
   searchUsers,
   getUsers,
