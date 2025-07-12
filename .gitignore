@@ -1,5 +1,7 @@
-/node_modules
+node_modules/
+dist/
 /.vscode
 .env
 *.pem
 *.log
+/generated/prisma
