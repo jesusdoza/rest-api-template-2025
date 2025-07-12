@@ -7,7 +7,7 @@ import { limiter } from "./config/limiter";
 import router from "./routes/index";
 import { errorHandler } from "./middleware/errorMiddleware";
 import passport from "passport";
-require("./config/passport");
+import("./config/passport");
 
 const app = express();
 app.options("*", cors(corsOptions));
