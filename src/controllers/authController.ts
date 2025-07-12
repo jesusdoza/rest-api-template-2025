@@ -7,7 +7,7 @@ import { NextFunction, Request, Response } from "express";
 import prisma from "../config/prisma"; //connection to Prisma client
 const User = prisma.user; // dealing with only user table
 
-type ExtendedErrorT = Error & { statusCode?: number };
+import { ExtendedErrorT } from "../types/error";
 
 // @desc    Register new user
 // @route   POST /register
