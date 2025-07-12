@@ -7,7 +7,8 @@ import { isAuth } from "../middleware/authMiddleware";
 const router = Router();
 
 router.use("/auth", authRoutes);
-router.use("/users", isAuth, usersRoutes);
+// router.use("/users", isAuth, usersRoutes);
+router.use("/users", usersRoutes);
 // router.use("/posts", isAuth, postsRoutes);
 
 export default router;

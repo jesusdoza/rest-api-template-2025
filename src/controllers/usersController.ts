@@ -53,7 +53,7 @@ const searchUsers = asyncHandler(
 // @access  Private
 const getUsers = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    const users = await User.findMany({});
+    const users = await User.findMany();
     res.status(200).json({ users });
   }
 );
