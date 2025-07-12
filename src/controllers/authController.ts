@@ -238,10 +238,4 @@ const deleteProfile = asyncHandler(
   }
 );
 
-module.exports = {
-  registerUser,
-  loginUser,
-  userProfile,
-  editProfile,
-  deleteProfile,
-};
+export { registerUser, loginUser, userProfile, editProfile, deleteProfile };
