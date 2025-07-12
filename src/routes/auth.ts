@@ -1,22 +1,26 @@
-const router = require('express').Router();
-const {
+import { Router } from "express";
+
+import {
   registerUser,
   loginUser,
   userProfile,
   editProfile,
   deleteProfile,
-} = require('../controllers/authController');
+} from "../controllers/authController";
+
 const {
   firstNameValidator,
   lastNameValidator,
   emailValidator,
   passwordValidator,
   checkValidations,
-} = require('../middleware/inputValidators');
-const { isAuth } = require('../middleware/authMiddleware');
+} = require("../middleware/inputValidators");
+const { isAuth } = require("../middleware/authMiddleware");
+
+const router = Router();
 
 router.post(
-  '/register',
+  "/register",
   firstNameValidator,
   lastNameValidator,
   emailValidator,
@@ -25,15 +29,16 @@ router.post(
   registerUser
 );
 router.post(
-  '/login',
+  "/login",
   emailValidator,
   passwordValidator,
   checkValidations,
   loginUser
 );
-router.get('/profile', isAuth, userProfile);
+router.get("/profile", isAuth, userProfile);
+
 router.put(
-  '/profile',
+  "/profile",
   isAuth,
   firstNameValidator,
   lastNameValidator,
@@ -41,6 +46,6 @@ router.put(
   checkValidations,
   editProfile
 );
-router.delete('/profile', isAuth, deleteProfile);
+router.delete("/profile", isAuth, deleteProfile);
 
 module.exports = router;

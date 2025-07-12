@@ -1,27 +1,23 @@
-const { logger } = require('./logger');
+import { logger } from "./logger";
+import { CorsOptions } from "cors";
 
-const whitelist = [
-  'https://meuzishun.github.io/pigeon-ui',
-  'https://meuzishun.github.io',
-  'http://127.0.0.1:5173',
-  'http://localhost:5173',
-];
+const whitelist = ["http://localhost:3000"];
 
-const corsOptions = {
+const corsOptions: CorsOptions = {
   origin: function (origin, callback) {
     logger.log({
-      level: 'info',
+      level: "info",
       message: `Receiving request from origin: ${origin}...`,
     });
     if (!origin || whitelist.includes(origin)) {
       logger.log({
-        level: 'info',
+        level: "info",
         message: `Origin ${origin} is whitelisted`,
       });
       callback(null, true);
     } else {
       logger.log({
-        level: 'error',
+        level: "error",
         message: `Origin ${origin} is not allowed`,
       });
       callback(new Error(`Not allowed by CORS: ${origin}`));
@@ -29,6 +25,4 @@ const corsOptions = {
   },
 };
 
-module.exports = {
-  corsOptions,
-};
+export { corsOptions };
